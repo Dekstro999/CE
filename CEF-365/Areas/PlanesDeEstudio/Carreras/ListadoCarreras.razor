@@ -1,0 +1,98 @@
+﻿@page "/ListarCarreras"
+
+@using Entidades.Modelos.PlanesDeEstudio.Carreras
+@using Microsoft.AspNetCore.Components.Routing
+@inject Negocios.Repositorios.PlanesDeEstudio.CarreraNegocios CarreraSrv
+@inject NavigationManager Nav
+
+<h3>Bienvenido al listado de Carreras</h3>
+
+<div class="container">
+    <div class="row mt-3 mb-5">
+        <table class="table table-striped">
+            <thead>
+                <tr class="text-center">
+                    <th>Clave</th>
+                    <th>Nombre</th>
+                    <th>Alias</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @if (LstCarreras is null || !LstCarreras.Any())
+                {
+                    <tr>
+                        <td class="text-center fw-bold text-danger" colspan="5">
+                            No hay carreras registradas.
+                        </td>
+                    </tr>
+                }
+                else
+                {
+                    @foreach (var carrera in LstCarreras)
+                    {
+                        <tr class="text-center">
+                            <td>@carrera.ClaveCarrera</td>
+                            <td class="text-lg-start">@carrera.NombreCarrera</td>
+                            <td class="text-lg-start">@carrera.AliasCarrera</td>
+                            <td>
+                                <span class="bg-estado badge bg-@(carrera.EstadoCarrera ? "success" : "danger")">
+                                    @(carrera.EstadoCarrera ? "Activo" : "Inactivo")
+                                </span>
+                            </td>
+                            <td class="text-center">
+                                <NavLink href="@($"/GestionCarrera/{carrera.IdCarrera}")"
+                                         class="btn btn-sm btn-outline-primary"
+                                         title="Edita los datos de la carrera">
+                                    <i class="bi bi-pen"></i>
+                                </NavLink>
+
+                                <button class="btn btn-outline-danger btn-sm"
+                                        title="Borra los datos de la carrera"
+                                        @onclick="() => BorrarCarrera(carrera.IdCarrera)">
+                                    <i class="bi bi-trash-fill"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@code {
+    private List<E_Carrera> LstCarreras = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var data = await CarreraSrv.ListarCarreras();
+            LstCarreras = data?.ToList() ?? new();
+        }
+        catch
+        {
+            LstCarreras = new();
+        }
+    }
+
+    private async Task BorrarCarrera(int id)
+    {
+        var res = await CarreraSrv.BorrarCarrera(id);
+        if (res.Resultado)
+        {
+            // Refrescar la tabla
+            var data = await CarreraSrv.ListarCarreras();
+            LstCarreras = data?.ToList() ?? new();
+            StateHasChanged();
+        }
+        else
+        {
+            // Aquí podrías mostrar res.Mensajes en un toast/alert
+            Console.WriteLine(string.Join(" | ", res.Mensajes));
+        }
+    }
+}

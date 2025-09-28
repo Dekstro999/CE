@@ -1,0 +1,43 @@
+﻿@rendermode InteractiveServer
+@page "/"
+
+<PageTitle>Home</PageTitle>
+
+<h1>Hello, world!</h1>
+
+@* boton que manda a planes de estudi *@
+
+<h3>Prueba de Modal</h3>
+
+<button class="btn btn-success mb-3" @onclick="MostrarModal">
+    Agregar Plan de Estudio
+</button>
+
+@if (ShowAddPlanModal)
+{
+    <div class="modal" style="display:block; background:rgba(0,0,0,0.5); position:fixed; top:0; left:0; width:100%; height:100%; z-index:1050;">
+        <div class="modal-dialog" style="margin:10% auto; background:white; padding:20px; border-radius:8px; width:300px; z-index:1060; position:relative;">
+            <h5 class="modal-title">Modal de prueba</h5>
+            <p>¡El botón sí funciona 🎉!</p>
+            <button class="btn btn-danger" style="z-index:1070; position:relative;" @onclick="CerrarModal">Cerrar</button>
+        </div>
+    </div>
+}
+
+@code {
+    private bool ShowAddPlanModal = false;
+
+    private void MostrarModal()
+    {
+        Console.WriteLine("Modal abierto");
+        ShowAddPlanModal = true;
+        StateHasChanged();
+    }
+
+    private void CerrarModal()
+    {
+        Console.WriteLine("Modal cerrado");
+        ShowAddPlanModal = false;
+        StateHasChanged();
+    }
+}

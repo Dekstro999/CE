@@ -1,0 +1,36 @@
+﻿<div class="sidebar-navmenu">
+    <div class="top-row ps-3 navbar navbar-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="">
+                <span class="brand-icon"></span>
+                <span class="brand-text">MiPrimerBlazor</span>
+            </a>
+        </div>
+    </div>
+
+    <nav class="nav-scrollable nav flex-column">
+        @foreach (var item in MenuItems)
+        {
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="@item.Route" Match="@(item.Route == "" ? NavLinkMatch.All : NavLinkMatch.Prefix)">
+                    <span class="@item.Icon" aria-hidden="true"></span>
+                    <span class="nav-text">@item.Name</span>
+                </NavLink>
+            </div>
+        }
+    </nav>
+</div>
+
+@code {
+    private record MenuItem(string Icon, string Route, string Name);
+
+    private readonly MenuItem[] MenuItems = new[]
+    {
+        new MenuItem("bi bi-house-door-fill-nav-menu", "", "Home"),
+ 
+        // tabla de carreras
+        new MenuItem("bi bi-table-nav-menu", "planes-estudio", "planesEstudio"),
+        new MenuItem("bi bi-table-nav-menu", "carreras", "Carreras"),
+    };
+}
+

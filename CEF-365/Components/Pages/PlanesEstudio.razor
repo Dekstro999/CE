@@ -1,0 +1,435 @@
+@rendermode InteractiveServer
+@page "/planes-estudio"
+@using Entidades.Modelos.PlanEstudios 
+@using Entidades.DTO.PlanesDeEstudio.PlaneEstudios
+@using Entidades.DTO.PlanesDeEstudio.Carreras
+@using Entidades.Generales
+@inject Datos.IRepositorios.PlanesDeEstudio.IPlanDeEstudioRepositorio PlanDeEstudioRepo
+@inject Negocios.Repositorios.PlanesDeEstudio.CarreraNegocios CarreraSrv
+@inject IJSRuntime JS
+
+<h3>Planes de Estudio</h3>
+
+<!-- Enlace tipo botón para agregar Plan de Estudio -->
+<a class="btn btn-success mb-3" @onclick="AbrirModalPlan" @onclick:preventDefault role="button">
+    Agregar Plan de Estudio
+</a>
+
+@if (ShowAddPlanModal)
+{
+    <div class="modal show d-block" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Agregar Plan de Estudio</h5>
+                    <button type="button" class="btn-close" @onclick="CerrarModalPlan"></button>
+                </div>
+                <EditForm Model="NuevoPlan" OnValidSubmit="GuardarPlanEstudio">
+                    <DataAnnotationsValidator />
+                    <ValidationSummary />
+                    <div class="modal-body">
+                        <div class="mb-2">
+                            <label class="form-label">Plan de Estudio</label>
+                            <InputText class="form-control" @bind-Value="NuevoPlan.PlanEstudio" />
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label">Fecha Creación</label>
+                            <InputDate class="form-control" @bind-Value="NuevoPlan.FechaCreacion" />
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label">Total Créditos</label>
+                            <InputNumber class="form-control" @bind-Value="NuevoPlan.TotalCreditos" />
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label">Créditos Optativos</label>
+                            <InputNumber class="form-control" @bind-Value="NuevoPlan.CreditosOptativos" />
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label">Créditos Obligatorios</label>
+                            <InputNumber class="form-control" @bind-Value="NuevoPlan.CreditoObligatorios" />
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label">Perfil de Ingreso</label>
+                            <InputText class="form-control" @bind-Value="NuevoPlan.PerfilDeIngreso" />
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label">Campo Ocupacional</label>
+                            <InputText class="form-control" @bind-Value="NuevoPlan.CampoOcupacional" />
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label">Comentarios</label>
+                            <InputTextArea class="form-control" @bind-Value="NuevoPlan.Comentarios" />
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label">Estado</label>
+                            <InputCheckbox class="form-check-input" @bind-Value="NuevoPlan.EstadoPlanEstudio" /> Activo
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label">Carrera</label>
+                            <InputSelect class="form-select" @bind-Value="NuevoPlan.IdCarrera">
+                                <option value="0">Seleccione una carrera</option>
+                                @foreach (var carrera in Carreras)
+                                {
+                                    <option value="@carrera.IdCarrera">@carrera.NombreCarrera</option>
+                                }
+                            </InputSelect>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" type="button" @onclick="CerrarModalPlan">Cerrar</button>
+                        <button class="btn btn-primary" type="submit">Guardar</button>
+                    </div>
+                </EditForm>
+            </div>
+        </div>
+    </div>
+    <div class="modal-backdrop fade show"></div>
+    @if (!string.IsNullOrEmpty(Mensaje))
+    {
+        <div class="alert alert-info mt-2">@Mensaje</div>
+    }
+}
+
+<!-- Tabla de Planes de Estudio -->
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Fecha Creación</th>
+            <th>Total Créditos</th>
+            <th>Carrera</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (listaPlanesEstudio is null || !listaPlanesEstudio.Any())
+        {
+            <tr><td colspan="6" class="text-center">No hay planes de estudio registrados.</td></tr>
+        }
+        else
+        {
+            @foreach (var plan in listaPlanesEstudio)
+            {
+                <tr>
+                    <td>@plan.IdPlanEstudio</td>
+                    <td>@plan.PlanEstudio</td>
+                    <td>@plan.FechaCreacion.ToShortDateString()</td>
+                    <td>@plan.TotalCreditos</td>
+                    <td>@plan.Carrera?.NombreCarrera</td>
+                    <td>
+                        <button class="btn btn-sm btn-primary" @onclick="() => EditarPlan(plan)">Editar</button>
+                        <button class="btn btn-sm btn-danger" @onclick="() => EliminarPlan(plan.IdPlanEstudio)">Eliminar</button>
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+
+<!-- Enlace tipo botón para agregar Carrera -->
+<a class="btn btn-success mb-3" @onclick="AbrirModalCarrera" @onclick:preventDefault role="button">
+    Agregar Carrera
+</a>
+
+@if (ShowAddCarreraModal)
+{
+    <div class="modal show d-block" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Agregar Carrera</h5>
+                    <button type="button" class="btn-close" @onclick="CerrarModalCarrera"></button>
+                </div>
+                <EditForm Model="NuevaCarrera" OnValidSubmit="GuardarCarrera">
+                    <DataAnnotationsValidator />
+                    <ValidationSummary />
+                    <div class="modal-body">
+                        <div class="mb-2">
+                            <label class="form-label">Clave Carrera</label>
+                            <InputText class="form-control" @bind-Value="NuevaCarrera.ClaveCarrera" />
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label">Nombre Carrera</label>
+                            <InputText class="form-control" @bind-Value="NuevaCarrera.NombreCarrera" />
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label">Alias Carrera</label>
+                            <InputText class="form-control" @bind-Value="NuevaCarrera.AliasCarrera" />
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label">Id Coordinador</label>
+                            <InputText class="form-control" @bind-Value="NuevaCarrera.IdCoordinador" />
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label">Estado</label>
+                            <InputCheckbox class="form-check-input" @bind-Value="NuevaCarrera.EstadoCarrera" /> Activo
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" type="button" @onclick="CerrarModalCarrera">Cerrar</button>
+                        <button class="btn btn-primary" type="submit">Guardar</button>
+                    </div>
+                </EditForm>
+            </div>
+        </div>
+    </div>
+    <div class="modal-backdrop fade show"></div>
+    @if (!string.IsNullOrEmpty(MensajeCarrera))
+    {
+        <div class="alert alert-info mt-2">@MensajeCarrera</div>
+    }
+}
+
+<!-- Tabla de Carreras -->
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Clave</th>
+            <th>Nombre</th>
+            <th>Alias</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Carreras is null || !Carreras.Any())
+        {
+            <tr><td colspan="6" class="text-center">No hay carreras registradas.</td></tr>
+        }
+        else
+        {
+            @foreach (var carrera in Carreras.Where(c => c.IdCarrera > 0 && !string.IsNullOrWhiteSpace(c.ClaveCarrera)))
+            {
+                <tr>
+                    <td>@carrera.IdCarrera</td>
+                    <td>@carrera.ClaveCarrera</td>
+                    <td>@carrera.NombreCarrera</td>
+                    <td>@carrera.AliasCarrera</td>
+                    <td>
+                        <span class="badge bg-@(carrera.EstadoCarrera ? "success" : "danger")">
+                            @(carrera.EstadoCarrera ? "Activo" : "Inactivo")
+                        </span>
+                    </td>
+                    <td>
+                        <button class="btn btn-sm btn-primary" @onclick="() => EditarCarrera(carrera)">Editar</button>
+                        <button class="btn btn-sm btn-danger" @onclick="() => EliminarCarrera(carrera.IdCarrera)">Eliminar</button>
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+
+@code {
+    private List<Entidades.Modelos.PlanEstudios.E_PlanEstudio> listaPlanesEstudio = new();
+    private List<Entidades.Modelos.PlanesDeEstudio.Carreras.E_Carrera> Carreras = new();
+    private bool ShowAddPlanModal = false;
+    private bool ShowAddCarreraModal = false;
+    private PlanEstudioDTO NuevoPlan = new();
+    private CarreraDTO NuevaCarrera = new();
+    private string Mensaje = string.Empty;
+    private string MensajeCarrera = string.Empty;
+    private int? EditandoPlanId = null;
+    private int? EditandoCarreraId = null;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var planes = await PlanDeEstudioRepo.GetAll();
+        listaPlanesEstudio = planes?.ToList() ?? new();
+        var carreras = await CarreraSrv.ListarCarreras();
+        Carreras = carreras?.ToList() ?? new();
+    }
+
+    private void AbrirModalPlan()
+    {
+        NuevoPlan = new();
+        Mensaje = string.Empty;
+        ShowAddPlanModal = true;
+    }
+    private void CerrarModalPlan()
+    {
+        ShowAddPlanModal = false;
+        Mensaje = string.Empty;
+    }
+    private void EditarPlan(Entidades.Modelos.PlanEstudios.E_PlanEstudio plan)
+    {
+        NuevoPlan = new PlanEstudioDTO
+        {
+            IdPlanEstudio = plan.IdPlanEstudio,
+            PlanEstudio = plan.PlanEstudio,
+            FechaCreacion = plan.FechaCreacion,
+            TotalCreditos = plan.TotalCreditos,
+            CreditosOptativos = plan.CreditosOptativos,
+            CreditoObligatorios = plan.CreditosObligatorios,
+            PerfilDeIngreso = plan.PerfilDeIngreso,
+            CampoOcupacional = plan.CampoOcupacional,
+            Comentarios = plan.Comentarios,
+            EstadoPlanEstudio = plan.EstadoPlanEstudio,
+            IdCarrera = plan.IdCarrera
+        };
+        EditandoPlanId = plan.IdPlanEstudio;
+        Mensaje = string.Empty;
+        ShowAddPlanModal = true;
+    }
+    private async Task GuardarPlanEstudio()
+    {
+        Mensaje = string.Empty;
+        try
+        {
+            await JS.InvokeAsync<object>("console.log", $"Valor de NuevoPlan.IdCarrera: {NuevoPlan.IdCarrera}");
+            if (NuevoPlan.IdCarrera <= 0)
+            {
+                Mensaje = "Debe seleccionar una carrera antes de guardar el plan de estudio.";
+                await JS.InvokeAsync<object>("console.error", Mensaje);
+                return;
+            }
+            var entidad = new Entidades.Modelos.PlanEstudios.E_PlanEstudio
+            {
+                IdPlanEstudio = NuevoPlan.IdPlanEstudio ?? 0,
+                PlanEstudio = NuevoPlan.PlanEstudio,
+                FechaCreacion = NuevoPlan.FechaCreacion,
+                TotalCreditos = NuevoPlan.TotalCreditos,
+                CreditosOptativos = NuevoPlan.CreditosOptativos,
+                CreditosObligatorios = NuevoPlan.CreditoObligatorios,
+                PerfilDeIngreso = NuevoPlan.PerfilDeIngreso,
+                CampoOcupacional = NuevoPlan.CampoOcupacional,
+                Comentarios = NuevoPlan.Comentarios,
+                EstadoPlanEstudio = NuevoPlan.EstadoPlanEstudio,
+                IdCarrera = NuevoPlan.IdCarrera
+            };
+            ResultadoAcciones resultado;
+            if (EditandoPlanId.HasValue)
+            {
+                resultado = await PlanDeEstudioRepo.ModificarPlanDeEstudio(entidad);
+            }
+            else
+            {
+                resultado = await PlanDeEstudioRepo.InsertarPlanDeEstudio(entidad);
+            }
+            if (resultado.Resultado)
+            {
+                Mensaje = EditandoPlanId.HasValue ? "Plan de estudio actualizado correctamente." : "Plan de estudio guardado correctamente.";
+                var planes = await PlanDeEstudioRepo.GetAll();
+                listaPlanesEstudio = planes?.ToList() ?? new();
+                ShowAddPlanModal = false;
+                EditandoPlanId = null;
+            }
+            else
+            {
+                Mensaje = string.Join("<br>", resultado.Mensajes);
+                await JS.InvokeAsync<object>("console.error", $"Error al guardar plan de estudio: {Mensaje}");
+            }
+        }
+        catch (Exception ex)
+        {
+            Mensaje = $"Error inesperado: {ex.Message}";
+            await JS.InvokeAsync<object>("console.error", $"Excepción al guardar plan de estudio: {ex}");
+        }
+    }
+    private void AbrirModalCarrera()
+    {
+        NuevaCarrera = new();
+        MensajeCarrera = string.Empty;
+        ShowAddCarreraModal = true;
+    }
+    private void CerrarModalCarrera()
+    {
+        ShowAddCarreraModal = false;
+        MensajeCarrera = string.Empty;
+    }
+    private void EditarCarrera(Entidades.Modelos.PlanesDeEstudio.Carreras.E_Carrera carrera)
+    {
+        NuevaCarrera = new CarreraDTO
+        {
+            IdCarrera = carrera.IdCarrera,
+            ClaveCarrera = carrera.ClaveCarrera,
+            NombreCarrera = carrera.NombreCarrera,
+            AliasCarrera = carrera.AliasCarrera,
+            IdCoordinador = carrera.IdCoordinador?.ToString() ?? "",
+            EstadoCarrera = carrera.EstadoCarrera
+        };
+        EditandoCarreraId = carrera.IdCarrera;
+        MensajeCarrera = string.Empty;
+        ShowAddCarreraModal = true;
+    }
+    private async Task GuardarCarrera()
+    {
+        MensajeCarrera = string.Empty;
+        try
+        {
+            var entidad = new Entidades.Modelos.PlanesDeEstudio.Carreras.E_Carrera
+            {
+                IdCarrera = NuevaCarrera.IdCarrera ?? 0,
+                ClaveCarrera = NuevaCarrera.ClaveCarrera,
+                NombreCarrera = NuevaCarrera.NombreCarrera,
+                AliasCarrera = NuevaCarrera.AliasCarrera,
+                IdCoordinador = int.TryParse(NuevaCarrera.IdCoordinador, out var idCoord) ? idCoord : null,
+                EstadoCarrera = NuevaCarrera.EstadoCarrera
+            };
+            ResultadoAcciones resultado;
+            if (EditandoCarreraId.HasValue)
+            {
+                resultado = await CarreraSrv.ModificarCarrera(entidad);
+            }
+            else
+            {
+                resultado = await CarreraSrv.InsertarCarrera(entidad);
+            }
+            if (resultado.Resultado)
+            {
+                MensajeCarrera = EditandoCarreraId.HasValue ? "Carrera actualizada correctamente." : "Carrera guardada correctamente.";
+                var carreras = await CarreraSrv.ListarCarreras();
+                Carreras = carreras?.ToList() ?? new();
+                ShowAddCarreraModal = false;
+                EditandoCarreraId = null;
+            }
+            else
+            {
+                MensajeCarrera = string.Join("<br>", resultado.Mensajes);
+                await JS.InvokeAsync<object>("console.error", $"Error al guardar carrera: {MensajeCarrera}");
+            }
+        }
+        catch (Exception ex)
+        {
+            MensajeCarrera = $"Error inesperado: {ex.Message}";
+            await JS.InvokeAsync<object>("console.error", $"Excepción al guardar carrera: {ex}");
+        }
+    }
+    private async Task EliminarPlan(int idPlanEstudio)
+    {
+        if (!await Confirmar("¿Seguro que desea eliminar el plan de estudio?")) return;
+        var resultado = await PlanDeEstudioRepo.BorrarPlanDeEstudio(idPlanEstudio);
+        if (resultado.Resultado)
+        {
+            Mensaje = "Plan de estudio eliminado correctamente.";
+            var planes = await PlanDeEstudioRepo.GetAll();
+            listaPlanesEstudio = planes?.ToList() ?? new();
+        }
+        else
+        {
+            Mensaje = string.Join("<br>", resultado.Mensajes);
+        }
+    }
+    private async Task EliminarCarrera(int idCarrera)
+    {
+        if (!await Confirmar("¿Seguro que desea eliminar la carrera?")) return;
+        var resultado = await CarreraSrv.BorrarCarrera(idCarrera);
+        if (resultado.Resultado)
+        {
+            MensajeCarrera = "Carrera eliminada correctamente.";
+            var carreras = await CarreraSrv.ListarCarreras();
+            Carreras = carreras?.ToList() ?? new();
+        }
+        else
+        {
+            MensajeCarrera = string.Join("<br>", resultado.Mensajes);
+        }
+    }
+    private async Task<bool> Confirmar(string mensaje)
+    {
+        // Puedes implementar una confirmación JS o Blazor modal aquí. Por ahora, usa JS simple:
+        return await JS.InvokeAsync<bool>("confirm", mensaje);
+    }
+}

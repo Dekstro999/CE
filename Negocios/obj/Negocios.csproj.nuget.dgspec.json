@@ -1,17 +1,108 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Portals\\Proyects\\CE\\Negocios\\Negocios.csproj": {}
+    "C:\\Portals\\Proyects\\CEF-365\\Negocios\\Negocios.csproj": {}
   },
   "projects": {
-    "C:\\Portals\\Proyects\\CE\\Entidades\\Entidades.csproj": {
+    "C:\\Portals\\Proyects\\CEF-365\\Datos\\Datos.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Portals\\Proyects\\CE\\Entidades\\Entidades.csproj",
-        "projectName": "Entidades",
-        "projectPath": "C:\\Portals\\Proyects\\CE\\Entidades\\Entidades.csproj",
+        "projectUniqueName": "C:\\Portals\\Proyects\\CEF-365\\Datos\\Datos.csproj",
+        "projectName": "Datos",
+        "projectPath": "C:\\Portals\\Proyects\\CEF-365\\Datos\\Datos.csproj",
         "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-        "outputPath": "C:\\Portals\\Proyects\\CE\\Entidades\\obj\\",
+        "outputPath": "C:\\Portals\\Proyects\\CEF-365\\Datos\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net9.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net9.0": {
+            "targetAlias": "net9.0",
+            "projectReferences": {
+              "C:\\Portals\\Proyects\\CEF-365\\Entidads\\Entidades.csproj": {
+                "projectPath": "C:\\Portals\\Proyects\\CEF-365\\Entidads\\Entidades.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.300"
+      },
+      "frameworks": {
+        "net9.0": {
+          "targetAlias": "net9.0",
+          "dependencies": {
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[9.0.9, )"
+            },
+            "Microsoft.EntityFrameworkCore.Design": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[9.0.9, )"
+            },
+            "Microsoft.EntityFrameworkCore.SqlServer": {
+              "target": "Package",
+              "version": "[9.0.9, )"
+            },
+            "Microsoft.EntityFrameworkCore.Tools": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[9.0.9, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.304/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\Portals\\Proyects\\CEF-365\\Entidads\\Entidades.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Portals\\Proyects\\CEF-365\\Entidads\\Entidades.csproj",
+        "projectName": "Entidades",
+        "projectPath": "C:\\Portals\\Proyects\\CEF-365\\Entidads\\Entidades.csproj",
+        "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
+        "outputPath": "C:\\Portals\\Proyects\\CEF-365\\Entidads\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -56,11 +147,11 @@
             },
             "Microsoft.EntityFrameworkCore": {
               "target": "Package",
-              "version": "[9.0.8, )"
+              "version": "[9.0.9, )"
             },
             "Microsoft.EntityFrameworkCore.Relational": {
               "target": "Package",
-              "version": "[9.0.8, )"
+              "version": "[9.0.9, )"
             }
           },
           "imports": [
@@ -83,14 +174,14 @@
         }
       }
     },
-    "C:\\Portals\\Proyects\\CE\\Negocios\\Negocios.csproj": {
+    "C:\\Portals\\Proyects\\CEF-365\\Negocios\\Negocios.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Portals\\Proyects\\CE\\Negocios\\Negocios.csproj",
+        "projectUniqueName": "C:\\Portals\\Proyects\\CEF-365\\Negocios\\Negocios.csproj",
         "projectName": "Negocios",
-        "projectPath": "C:\\Portals\\Proyects\\CE\\Negocios\\Negocios.csproj",
+        "projectPath": "C:\\Portals\\Proyects\\CEF-365\\Negocios\\Negocios.csproj",
         "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-        "outputPath": "C:\\Portals\\Proyects\\CE\\Negocios\\obj\\",
+        "outputPath": "C:\\Portals\\Proyects\\CEF-365\\Negocios\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -111,11 +202,8 @@
           "net9.0": {
             "targetAlias": "net9.0",
             "projectReferences": {
-              "C:\\Portals\\Proyects\\CE\\Entidades\\Entidades.csproj": {
-                "projectPath": "C:\\Portals\\Proyects\\CE\\Entidades\\Entidades.csproj"
-              },
-              "C:\\Portals\\Proyects\\CE\\Services\\Services.csproj": {
-                "projectPath": "C:\\Portals\\Proyects\\CE\\Services\\Services.csproj"
+              "C:\\Portals\\Proyects\\CEF-365\\Datos\\Datos.csproj": {
+                "projectPath": "C:\\Portals\\Proyects\\CEF-365\\Datos\\Datos.csproj"
               }
             }
           }
@@ -135,71 +223,12 @@
       "frameworks": {
         "net9.0": {
           "targetAlias": "net9.0",
-          "imports": [
-            "net461",
-            "net462",
-            "net47",
-            "net471",
-            "net472",
-            "net48",
-            "net481"
-          ],
-          "assetTargetFallback": true,
-          "warn": true,
-          "frameworkReferences": {
-            "Microsoft.NETCore.App": {
-              "privateAssets": "all"
+          "dependencies": {
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[9.0.9, )"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.304/PortableRuntimeIdentifierGraph.json"
-        }
-      }
-    },
-    "C:\\Portals\\Proyects\\CE\\Services\\Services.csproj": {
-      "version": "1.0.0",
-      "restore": {
-        "projectUniqueName": "C:\\Portals\\Proyects\\CE\\Services\\Services.csproj",
-        "projectName": "Services",
-        "projectPath": "C:\\Portals\\Proyects\\CE\\Services\\Services.csproj",
-        "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-        "outputPath": "C:\\Portals\\Proyects\\CE\\Services\\obj\\",
-        "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
-        "configFilePaths": [
-          "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
-        ],
-        "originalTargetFrameworks": [
-          "net9.0"
-        ],
-        "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "https://api.nuget.org/v3/index.json": {}
-        },
-        "frameworks": {
-          "net9.0": {
-            "targetAlias": "net9.0",
-            "projectReferences": {}
-          }
-        },
-        "warningProperties": {
-          "warnAsError": [
-            "NU1605"
-          ]
-        },
-        "restoreAuditProperties": {
-          "enableAudit": "true",
-          "auditLevel": "low",
-          "auditMode": "direct"
-        },
-        "SdkAnalysisLevel": "9.0.300"
-      },
-      "frameworks": {
-        "net9.0": {
-          "targetAlias": "net9.0",
           "imports": [
             "net461",
             "net462",
